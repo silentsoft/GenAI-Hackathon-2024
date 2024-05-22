@@ -1,6 +1,8 @@
 # GenAI Hackathon 2024
 
-![](/images/screenshot.png)
+![](/images/screenshot1.png)
+
+![](/images/screenshot2.png)
 
 ## Image Size Comparison
 
