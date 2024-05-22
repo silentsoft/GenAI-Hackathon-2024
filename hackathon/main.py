@@ -8,6 +8,7 @@ import os
 import platform
 import subprocess
 import uuid
+import random
 
 
 def simple_generate(output_dir, image1, image2):
@@ -34,6 +35,20 @@ def reconstruct(output_dir, image_index):
         db_path=f"{output_dir}/database.db",
         output_path=f"{output_dir}/reconstructed_image{image_index}.avif"
     )
+
+
+def defect_generation(count):
+    images = [
+        (random.choice([
+            "../images/predicted_defect_pcb_1.jpg",
+            "../images/predicted_defect_pcb_2.jpg",
+            "../images/predicted_defect_pcb_3.jpg",
+            "../images/predicted_defect_pcb_4.jpg",
+            "../images/predicted_defect_pcb_5.jpg"
+        ]), f"Predicted Defect#{i+1}")
+        for i in range(count)
+    ]
+    return images
 
 
 def open_directory(path):
@@ -122,6 +137,18 @@ if __name__ == "__main__":
                 with gr.Column():
                     advanced_reconstruct3_number = gr.Number(label="Image Index", value=3, interactive=False)
                 advanced_reconstruct3_button = gr.Button("Reconstruct#3")
+        with gr.Tab("Defect Simulation"):
+            with gr.Row():
+                with gr.Column():
+                    gr.Gallery([("../images/source_pcb_1.png", "Good#1")], label="Good")
+                with gr.Column():
+                    gr.Gallery([("../images/source_pcb_2.png", "Bad#1"), ("../images/source_pcb_3.png", "Bad#2")], label="Bad")
+            with gr.Row():
+                with gr.Column():
+                    defect_generation_number = gr.Number(label="Generations", value=1, minimum=1, maximum=5, interactive=True)
+                defect_generation_button = gr.Button("Defect Simulation", variant="primary")
+            with gr.Row():
+                defect_gallery = gr.Gallery(columns=5, label="Predicted Defects")
 
         simple_output_dir_open.click(open_directory, inputs=simple_output_dir)
         simple_generate_button.click(simple_generate, inputs=[simple_output_dir, simple_file1, simple_file2])
@@ -133,5 +160,7 @@ if __name__ == "__main__":
         advanced_reconstruct1_button.click(reconstruct, inputs=[advanced_output_dir, advanced_reconstruct1_number])
         advanced_reconstruct2_button.click(reconstruct, inputs=[advanced_output_dir, advanced_reconstruct2_number])
         advanced_reconstruct3_button.click(reconstruct, inputs=[advanced_output_dir, advanced_reconstruct3_number])
+
+        defect_generation_button.click(defect_generation, inputs=defect_generation_number, outputs=defect_gallery)
 
     demo.launch()
