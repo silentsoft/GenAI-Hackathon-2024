@@ -58,7 +58,7 @@ def open_directory(path):
     if platform.system().lower() == "darwin":
         subprocess.Popen(["open", path])
     else:
-        os.startfile(path)
+        subprocess.Popen(["explorer", os.path.realpath(path)])
 
 
 def open_directory_label():
